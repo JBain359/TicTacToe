@@ -1,0 +1,109 @@
+import java.applet.Applet;
+import java.awt.*;
+
+public class TicTacToe extends Applet {
+  
+  TicTacToeSquare [] hashtag = new TicTacToeSquare[9];
+  int boxClicked=0;
+  int turn = 1;
+  String XO = "";
+  int diagAdj=0;
+  int cardAdj=0;
+  String winner = "";
+  int debug;
+  public void init()
+  {
+    for(int i = 0; i<hashtag.length; i++)
+    {
+      int xPos = (i%3)+1;
+      int yPos = i/3;
+      hashtag[i] = new TicTacToeSquare(xPos*100,yPos*100,90,90);
+      
+    }
+  }
+  
+  public void paint(Graphics g) 
+  {
+    
+    for(int i = 0; i<hashtag.length; i++)
+    {
+      
+      Expo.setFont(g,"Arial",Font.BOLD,50);
+      hashtag[i].drawTic(g);
+    }
+    
+    if(boxClicked >0)
+    {
+      Expo.drawString(g,"You clicked box #"+boxClicked,150,500);
+    }
+    
+    if(!winner.equals(""))
+    {
+      Expo.drawString(g,"Winner is: "+winner + " " +diagAdj+ " " + cardAdj+ " " + debug + " " + XO,150,400);
+    }
+    
+    
+  }
+  
+  
+    
+  public boolean mouseDown(Event e, int x, int y)
+  {
+    boxClicked=0;
+    
+    
+    int movedX = 0;
+    int movedY = 0;
+    for(int c = 0; c<hashtag.length; c++)
+    {
+      diagAdj=0;
+      cardAdj=0;
+      if(hashtag[c].inside(x,y))
+      {
+        boxClicked = c+1;
+        
+        if(hashtag[c].mark=="")
+        {
+          turn *= -1 ;
+          if(turn == 1){XO="X";}
+          if(turn == -1){XO="O";}
+          hashtag[c].setMark(XO);
+        }
+      }
+      
+                  
+        for(int n = 0; n<9;n++)
+        {
+          movedX = hashtag[c].x()+ hashtag[c].w()/2 +hashtag[c].w()*(n%3)-1;
+          movedY = hashtag[c].y()+ hashtag[c].h()/2 +hashtag[c].h()*(n/3)-1;
+          
+          if(hashtag[adj].inside(movedX,movedY) && hashtag[adj].mark().equals(hashtag[c].mark()) && !(hashtag[c].mark().equals("")) )
+          {
+            if(hashtag[c].x()!=hashtag[adj].x ^ hashtag[c].y()!=hashtag[adj].y)
+            {
+              cardAdj++;
+              
+            }
+            else if(hashtag[c].x()!=hashtag[adj].x && hashtag[c].y()!=hashtag[adj].y)
+            {
+              diagAdj++;
+            }
+            if(diagAdj==2 || cardAdj==2)
+            {
+              winner = hashtag[c].mark();  
+              debug = adj;                         
+              break;
+            }
+          }
+          
+          
+        }
+      
+      
+      
+    }
+    repaint();
+    return true;
+  }
+    
+}                
